@@ -5,7 +5,7 @@ import {
   createShopifyProduct,
   deleteShopifyProduct,
 } from '../services/product';
-import { uploadImageToCloudinary } from '../../service/cloudinary';
+import { uploadImageToCloudinary } from '../../../services/cloudinary';
 import path from 'path';
 
 export default factories.createCoreController('api::product.product', ({ strapi }) => ({
