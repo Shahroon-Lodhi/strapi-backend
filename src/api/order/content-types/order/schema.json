@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "courier": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::courier.courier",
+      "inversedBy": "orders"
+    },
+    "order_id": {
+      "type": "uid"
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "woocommerce",
+        "shopify"
+      ]
+    },
+    "order_status": {
+      "type": "string"
+    },
+    "total_amount": {
+      "type": "decimal"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "line_items": {
+      "type": "json"
+    },
+    "placed_at": {
+      "type": "datetime"
+    },
+    "email": {
+      "type": "email"
+    },
+    "deleted": {
+      "type": "boolean"
+    }
+  }
+}

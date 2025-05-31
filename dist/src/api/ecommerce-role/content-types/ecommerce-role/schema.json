@@ -1,0 +1,62 @@
+{
+    "kind": "collectionType",
+    "collectionName": "ecommerce_roles",
+    "info": {
+        "singularName": "ecommerce-role",
+        "pluralName": "ecommerce-roles",
+        "displayName": "Ecommerce_Roles",
+        "description": ""
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "R_Name": {
+            "type": "string",
+            "unique": true
+        },
+        "R_Description": {
+            "type": "text"
+        },
+        "R_DiscountLimit": {
+            "type": "integer"
+        },
+        "R_Purchase": {
+            "type": "boolean"
+        },
+        "R_Sales": {
+            "type": "boolean"
+        },
+        "R_Product": {
+            "type": "boolean"
+        },
+        "R_Finance": {
+            "type": "boolean"
+        },
+        "R_Location": {
+            "type": "boolean"
+        },
+        "R_Settings": {
+            "type": "boolean"
+        },
+        "R_Inventory": {
+            "type": "boolean"
+        },
+        "R_Dashboard": {
+            "type": "boolean"
+        },
+        "R_Report": {
+            "type": "boolean"
+        },
+        "IF_ADMIN_ACCESS": {
+            "type": "boolean"
+        },
+        "personals": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::personal.personal",
+            "mappedBy": "ecommerce_role"
+        }
+    }
+}

@@ -1,0 +1,76 @@
+{
+  "kind": "collectionType",
+  "collectionName": "companies",
+  "info": {
+    "singularName": "company",
+    "pluralName": "companies",
+    "displayName": "Company",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "C_ID": {
+      "type": "uid"
+    },
+    "C_Name": {
+      "type": "string"
+    },
+    "C_Address": {
+      "type": "text"
+    },
+    "C_Email": {
+      "type": "email"
+    },
+    "C_Number": {
+      "type": "biginteger"
+    },
+    "C_Country": {
+      "type": "string"
+    },
+    "C_City": {
+      "type": "string"
+    },
+    "C_Zipcode": {
+      "type": "biginteger"
+    },
+    "C_Info": {
+      "type": "text"
+    },
+    "ecommerce_roles": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::ecommerce-role.ecommerce-role"
+    },
+    "personals": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::personal.personal"
+    },
+    "financial_reports": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::financial-report.financial-report",
+      "mappedBy": "companies"
+    },
+    "customers": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::customer.customer",
+      "mappedBy": "company"
+    },
+    "suppliers": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::supplier.supplier",
+      "mappedBy": "company"
+    },
+    "configuration": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::configuration.configuration"
+    }
+  }
+}

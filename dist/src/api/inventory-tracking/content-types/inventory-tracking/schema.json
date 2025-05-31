@@ -1,0 +1,54 @@
+{
+    "kind": "collectionType",
+    "collectionName": "inventory_trackings",
+    "info": {
+        "singularName": "inventory-tracking",
+        "pluralName": "inventory-trackings",
+        "displayName": "InventoryTracking"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "InventoryTracking_ID": {
+            "type": "uid"
+        },
+        "Opening": {
+            "type": "integer"
+        },
+        "Net_Purchases": {
+            "type": "integer"
+        },
+        "Net_Sales": {
+            "type": "integer"
+        },
+        "Moved_In": {
+            "type": "integer"
+        },
+        "Moved_Out": {
+            "type": "integer"
+        },
+        "In_Transit": {
+            "type": "integer"
+        },
+        "Adjustments_Positive": {
+            "type": "integer"
+        },
+        "Adjustments_Negative": {
+            "type": "integer"
+        },
+        "Closing": {
+            "type": "integer"
+        },
+        "Product_ID": {
+            "type": "integer"
+        },
+        "product": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::product.product",
+            "inversedBy": "inventory_trackings"
+        }
+    }
+}

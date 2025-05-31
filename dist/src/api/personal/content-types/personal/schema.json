@@ -1,0 +1,46 @@
+{
+    "kind": "collectionType",
+    "collectionName": "personals",
+    "info": {
+        "singularName": "personal",
+        "pluralName": "personals",
+        "displayName": "Personal",
+        "description": ""
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "Personal_ID": {
+            "type": "uid"
+        },
+        "Name": {
+            "type": "string"
+        },
+        "Email": {
+            "type": "email"
+        },
+        "CC_Email": {
+            "type": "email"
+        },
+        "BCC_Email": {
+            "type": "email"
+        },
+        "Password": {
+            "type": "password"
+        },
+        "Location": {
+            "type": "text"
+        },
+        "R_Name": {
+            "type": "string"
+        },
+        "ecommerce_role": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::ecommerce-role.ecommerce-role",
+            "inversedBy": "personals"
+        }
+    }
+}

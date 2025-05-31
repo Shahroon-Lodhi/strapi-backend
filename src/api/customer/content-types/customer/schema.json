@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "customers",
+  "info": {
+    "singularName": "customer",
+    "pluralName": "customers",
+    "displayName": "Customer"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Customer_ID": {
+      "type": "uid"
+    },
+    "Customer_Name": {
+      "type": "string"
+    },
+    "CNIC_No": {
+      "type": "string"
+    },
+    "NTN_No": {
+      "type": "string"
+    },
+    "Email": {
+      "type": "email"
+    },
+    "Contact_Number": {
+      "type": "biginteger"
+    },
+    "Address": {
+      "type": "text"
+    },
+    "City": {
+      "type": "string"
+    },
+    "Country": {
+      "type": "string"
+    },
+    "ZipCode": {
+      "type": "biginteger"
+    },
+    "company": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::company.company",
+      "inversedBy": "customers"
+    }
+  }
+}

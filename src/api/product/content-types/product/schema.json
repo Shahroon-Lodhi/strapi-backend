@@ -1,0 +1,56 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Product",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Product_ID": {
+      "type": "uid"
+    },
+    "Product_Name": {
+      "type": "string"
+    },
+    "Product_SKU": {
+      "type": "string"
+    },
+    "Category": {
+      "type": "string"
+    },
+    "HS_Code": {
+      "type": "string"
+    },
+    "Cost_Price": {
+      "type": "decimal"
+    },
+    "Selling_Price": {
+      "type": "decimal"
+    },
+    "Stock_Quantity": {
+      "type": "integer"
+    },
+    "inventory_trackings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::inventory-tracking.inventory-tracking",
+      "mappedBy": "product"
+    },
+    "image": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

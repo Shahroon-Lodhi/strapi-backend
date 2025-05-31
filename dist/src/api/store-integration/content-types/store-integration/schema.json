@@ -1,0 +1,39 @@
+{
+    "kind": "collectionType",
+    "collectionName": "store_integrations",
+    "info": {
+        "singularName": "store-integration",
+        "pluralName": "store-integrations",
+        "displayName": "store-integration"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "attributes": {
+        "platform": {
+            "type": "enumeration",
+            "enum": [
+                "shopify",
+                "woocommerce"
+            ]
+        },
+        "store_url": {
+            "type": "string"
+        },
+        "access_token": {
+            "type": "string"
+        },
+        "consumer_key": {
+            "type": "string"
+        },
+        "consumer_secret": {
+            "type": "string"
+        },
+        "api_version": {
+            "type": "string"
+        },
+        "is_active": {
+            "type": "boolean"
+        }
+    }
+}

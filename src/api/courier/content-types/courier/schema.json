@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "couriers",
+  "info": {
+    "singularName": "courier",
+    "pluralName": "couriers",
+    "displayName": "Courier"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Courier_ID": {
+      "type": "uid"
+    },
+    "Courier_Name": {
+      "type": "string"
+    },
+    "Courier_Email": {
+      "type": "email"
+    },
+    "Phone_Number": {
+      "type": "biginteger"
+    },
+    "orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::order.order",
+      "mappedBy": "courier"
+    }
+  }
+}

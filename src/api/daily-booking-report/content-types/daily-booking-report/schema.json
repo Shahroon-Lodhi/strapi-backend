@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "daily_booking_reports",
+  "info": {
+    "singularName": "daily-booking-report",
+    "pluralName": "daily-booking-reports",
+    "displayName": "DailyBookingReport",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "DailyBookingReport_ID": {
+      "type": "uid"
+    },
+    "Booking_Date": {
+      "type": "datetime"
+    },
+    "Total_Orders": {
+      "type": "integer"
+    },
+    "Ready_To_Ship": {
+      "type": "integer"
+    },
+    "Shipped": {
+      "type": "integer"
+    },
+    "Delivered": {
+      "type": "integer"
+    },
+    "Delivery_Failed": {
+      "type": "integer"
+    },
+    "Partial_Return": {
+      "type": "integer"
+    },
+    "Returned": {
+      "type": "integer"
+    },
+    "Restocked": {
+      "type": "integer"
+    },
+    "Courier_ID": {
+      "type": "integer"
+    },
+    "inventory_trackings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::inventory-tracking.inventory-tracking"
+    }
+  }
+}

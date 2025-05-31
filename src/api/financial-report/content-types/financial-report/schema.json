@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "financial_reports",
+  "info": {
+    "singularName": "financial-report",
+    "pluralName": "financial-reports",
+    "displayName": "FinancialReport",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "FinancialReport_ID": {
+      "type": "uid"
+    },
+    "Report_Type": {
+      "type": "enumeration",
+      "enum": [
+        "Sales",
+        "Product",
+        "Inventory"
+      ]
+    },
+    "Report_Date": {
+      "type": "datetime"
+    },
+    "Assets": {
+      "type": "decimal"
+    },
+    "Liabilities": {
+      "type": "decimal"
+    },
+    "Income": {
+      "type": "decimal"
+    },
+    "Expenses": {
+      "type": "decimal"
+    },
+    "Net_Profit": {
+      "type": "decimal"
+    },
+    "companies": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::company.company",
+      "inversedBy": "financial_reports"
+    }
+  }
+}
