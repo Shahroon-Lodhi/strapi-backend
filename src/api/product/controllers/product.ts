@@ -5,28 +5,22 @@ import {
   createShopifyProduct,
   deleteShopifyProduct,
 } from '../services/product';
-import { uploadImageToCloudinary } from '../../../services/cloudinary';
-import path from 'path';
+
+const NGROK_BASE_URL = 'https://5935-2400-adc5-17e-4f00-e433-2328-8ac9-5454.ngrok-free.app';
 
 export default factories.createCoreController('api::product.product', ({ strapi }) => ({
-  async create(ctx) {
-    const response = await super.create(ctx);
+async create(ctx) {
+  const response = await super.create(ctx); // Create product in Strapi
 
-    const productData = ctx.request.body.data;
-    const imageData = response?.data?.attributes?.image?.data;
+  const productData = ctx.request.body.data;
 
-    let cloudinaryUrl = null;
+  try {
+    // Extract relative image URL from response
+    const imageUrl = response?.data?.attributes?.image?.data?.attributes?.url;
 
-    if (imageData) {
-      const localImageUrl = imageData.attributes.url; // e.g. /uploads/filename.jpg
-      const localImagePath = path.join(process.cwd(), 'public', localImageUrl); // full local path
-
-      try {
-        cloudinaryUrl = await uploadImageToCloudinary(localImagePath);
-      } catch (err) {
-        strapi.log.error('Cloudinary upload failed:', err);
-      }
-    }
+    // Replace with your public Ngrok URL
+    const baseUrl = 'https://5935-2400-adc5-17e-4f00-e433-2328-8ac9-5454.ngrok-free.app';
+    const fullImageUrl = imageUrl ? `${baseUrl}${imageUrl}` : null;
 
     const wooPayload = {
       title: productData.Product_Name,
@@ -34,80 +28,25 @@ export default factories.createCoreController('api::product.product', ({ strapi 
       description: `SKU: ${productData.Product_SKU}, HS_Code: ${productData.HS_Code}, Category: ${productData.categoryName}`,
       stock_quantity: productData.Stock_Quantity,
       sku: productData.Product_SKU,
-      imageUrl: cloudinaryUrl,
+      imageUrl: fullImageUrl,
       categoryName: productData.categoryName,
     };
 
-    const shopifyPayload = { ...wooPayload };
+    const shopifyPayload = {
+      ...wooPayload, // same fields
+    };
 
-    try {
-      await createWooProduct(wooPayload);
-      await createShopifyProduct(shopifyPayload);
-    } catch (err) {
-      strapi.log.error('❌ WooCommerce/Shopify sync failed:', err);
-    }
+    // Sync to WooCommerce
+    await createWooProduct(wooPayload);
 
-    return response;
-  },
+    // Sync to Shopify
+    await createShopifyProduct(shopifyPayload);
+  } catch (err) {
+    strapi.log.error('❌ WooCommerce/Shopify sync failed:', err);
+  }
 
-  async update(ctx) {
-    const updatedData = ctx.request.body.data;
-    const sku = updatedData?.Product_SKU;
-    if (!sku) return ctx.badRequest('Product_SKU is required');
-
-    const matching = await strapi.entityService.findMany('api::product.product', {
-      filters: { Product_SKU: sku },
-    });
-
-    if (!matching || matching.length === 0) {
-      return ctx.notFound('Product with given SKU not found');
-    }
-
-    const productId = matching[0].id;
-
-    const response = await strapi.entityService.update('api::product.product', productId, {
-      data: updatedData,
-    });
-
-    // Upload new image to Cloudinary if image provided
-    let cloudinaryUrl = null;
-    if (updatedData?.image?.data?.attributes?.url) {
-      const localImageUrl = updatedData.image.data.attributes.url;
-      const localImagePath = path.join(process.cwd(), 'public', localImageUrl);
-
-      try {
-        cloudinaryUrl = await uploadImageToCloudinary(localImagePath);
-      } catch (err) {
-        strapi.log.error('Cloudinary upload failed:', err);
-      }
-    }
-
-    const categoryName = updatedData.Category?.name || 'Uncategorized';
-
-    try {
-      await strapi.service('api::product.product').updateWooProduct(sku, {
-        name: updatedData.Product_Name,
-        price: updatedData.Selling_Price,
-        description: `SKU: ${sku}, HS_Code: ${updatedData.HS_Code}, Category: ${categoryName}`,
-        stock_quantity: updatedData.Stock_Quantity,
-        imageUrl: cloudinaryUrl,
-        categoryName,
-      });
-
-      await strapi.service('api::product.product').updateShopifyProduct(sku, {
-        title: updatedData.Product_Name,
-        price: updatedData.Selling_Price,
-        description: `SKU: ${sku}, HS_Code: ${updatedData.HS_Code}, Category: ${categoryName}`,
-        stock_quantity: updatedData.Stock_Quantity,
-        imageUrl: cloudinaryUrl,
-        categoryName,
-      });
-    } catch (err) {
-      strapi.log.error('❌ Update sync failed:', err);
-    }
-
-    return ctx.send({ message: 'Product updated in Strapi, WooCommerce, and Shopify', data: response });
-  },
+  return response;
+},
 
   async delete(ctx) {
     const id = ctx.params.id;
@@ -142,5 +81,53 @@ export default factories.createCoreController('api::product.product', ({ strapi 
       strapi.log.error('❌ Stock sync failed:', err);
       return ctx.internalServerError('Stock sync failed');
     }
+  },
+
+  async update(ctx) {
+    const updatedData = ctx.request.body.data;
+    const sku = updatedData?.Product_SKU;
+    if (!sku) return ctx.badRequest('Product_SKU is required');
+
+    const matching = await strapi.entityService.findMany('api::product.product', {
+      filters: { Product_SKU: sku },
+    });
+
+    if (!matching || matching.length === 0) {
+      return ctx.notFound('Product with given SKU not found');
+    }
+
+    const productId = matching[0].id;
+
+    const response = await strapi.entityService.update('api::product.product', productId, {
+      data: updatedData,
+    });
+
+    try {
+      const imageUrl = updatedData?.image?.data?.attributes?.url;
+      const fullImageUrl = imageUrl ? `${NGROK_BASE_URL}${imageUrl}` : null;
+      const categoryName = updatedData.Category?.name || 'Uncategorized';
+
+      await strapi.service('api::product.product').updateWooProduct(sku, {
+        name: updatedData.Product_Name,
+        price: updatedData.Selling_Price,
+        description: `SKU: ${sku}, HS_Code: ${updatedData.HS_Code}, Category: ${categoryName}`,
+        stock_quantity: updatedData.Stock_Quantity,
+        imageUrl: fullImageUrl,
+        categoryName,
+      });
+
+      await strapi.service('api::product.product').updateShopifyProduct(sku, {
+        title: updatedData.Product_Name,
+        price: updatedData.Selling_Price,
+        description: `SKU: ${sku}, HS_Code: ${updatedData.HS_Code}, Category: ${categoryName}`,
+        stock_quantity: updatedData.Stock_Quantity,
+        imageUrl: fullImageUrl,
+        categoryName,
+      });
+    } catch (err) {
+      strapi.log.error('❌ Update sync failed:', err);
+    }
+
+    return ctx.send({ message: 'Product updated in Strapi, WooCommerce, and Shopify', data: response });
   },
 }));

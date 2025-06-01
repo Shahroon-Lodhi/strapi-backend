@@ -3,16 +3,16 @@ import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
 import axios from 'axios';
 
 const shopifyStoreUrl = 'https://unify-fyp.myshopify.com/admin/api/2023-10';
-const accessToken = process.env.SHOPIFY_ACCESS_TOKEN;
+const accessToken = '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';
 
 const api = new WooCommerceRestApi({
   url: 'http://unify.local',
-  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
-  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
+  consumerKey: 'ck_a5f7fb1a7c1d2a2fe6c9372d95aab31fa474ca9b',
+  consumerSecret: 'cs_101f5befcb677339149e42659a7f707c857e4b59',
   version: 'wc/v3',
 });
 
-export const createWooProduct = async (productData: any) => {
+export const createWooProduct = async (productData) => {
   try {
     const res = await api.post('products', {
       name: productData.title,
@@ -28,12 +28,12 @@ export const createWooProduct = async (productData: any) => {
     });
 
     console.log('✅ Woo product synced:', res.data);
-  } catch (err: any) {
+  } catch (err) {
     console.error('❌ Woo sync error:', err.response?.data || err.message);
   }
 };
 
-export const createShopifyProduct = async (productData: any) => {
+export const createShopifyProduct = async (productData) => {
   try {
     const response = await axios.post(
       `${shopifyStoreUrl}/products.json`,
@@ -57,12 +57,12 @@ export const createShopifyProduct = async (productData: any) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          'X-Shopify-Access-Token': accessToken || '',
+          'X-Shopify-Access-Token': accessToken,
         },
       }
     );
     console.log('✅ Shopify product synced:', response.data);
-  } catch (err: any) {
+  } catch (err) {
     console.error('❌ Shopify sync error:', err.response?.data || err.message);
   }
 };
@@ -79,7 +79,7 @@ export const deleteWooProduct = async (sku: string) => {
 
     await api.delete(`products/${product.id}`, { force: true });
     console.log(`🗑️ Deleted Woo product ID ${product.id}`);
-  } catch (err: any) {
+  } catch (err) {
     console.error('❌ Woo delete error:', err.response?.data || err.message);
   }
 };
@@ -88,7 +88,7 @@ export const deleteShopifyProduct = async (sku: string) => {
   try {
     const response = await axios.get(`${shopifyStoreUrl}/products.json`, {
       headers: {
-        'X-Shopify-Access-Token': accessToken || '',
+        'X-Shopify-Access-Token': accessToken,
       },
     });
 
@@ -103,12 +103,12 @@ export const deleteShopifyProduct = async (sku: string) => {
 
     await axios.delete(`${shopifyStoreUrl}/products/${product.id}.json`, {
       headers: {
-        'X-Shopify-Access-Token': accessToken || '',
+        'X-Shopify-Access-Token': accessToken,
       },
     });
 
     console.log(`🗑️ Deleted Shopify product ID ${product.id}`);
-  } catch (err: any) {
+  } catch (err) {
     console.error('❌ Shopify delete error:', err.response?.data || err.message);
   }
 };
@@ -142,7 +142,7 @@ export default factories.createCoreService('api::product.product', ({ strapi }) 
       }
 
       const res = await axios.get(`${shopifyStoreUrl}/products.json`, {
-        headers: { 'X-Shopify-Access-Token': accessToken || '' },
+        headers: { 'X-Shopify-Access-Token': accessToken },
       });
 
       const shopifyProduct = res.data.products.find((p: any) =>
@@ -163,13 +163,13 @@ export default factories.createCoreService('api::product.product', ({ strapi }) 
           {
             headers: {
               'Content-Type': 'application/json',
-              'X-Shopify-Access-Token': accessToken || '',
+              'X-Shopify-Access-Token': accessToken,
             },
           }
         );
         console.log(`✅ Shopify stock updated: ${sku} → ${newStock}`);
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('❌ Stock sync error:', err.response?.data || err.message);
     }
   },
@@ -189,7 +189,7 @@ export default factories.createCoreService('api::product.product', ({ strapi }) 
       });
 
       console.log(`✅ WooCommerce product updated: ${sku}`);
-    } catch (err: any) {
+    } catch (err) {
       console.error('❌ Woo update error:', err.response?.data || err.message);
     }
   },
@@ -197,7 +197,7 @@ export default factories.createCoreService('api::product.product', ({ strapi }) 
   updateShopifyProduct: async (sku, updatedData) => {
     try {
       const res = await axios.get(`${shopifyStoreUrl}/products.json`, {
-        headers: { 'X-Shopify-Access-Token': accessToken || '' },
+        headers: { 'X-Shopify-Access-Token': accessToken },
       });
 
       const product = res.data.products.find((p: any) =>
@@ -228,13 +228,13 @@ export default factories.createCoreService('api::product.product', ({ strapi }) 
         {
           headers: {
             'Content-Type': 'application/json',
-            'X-Shopify-Access-Token': accessToken || '',
+            'X-Shopify-Access-Token': accessToken,
           },
         }
       );
 
       console.log(`✅ Shopify product updated: ${sku}`);
-    } catch (err: any) {
+    } catch (err) {
       console.error('❌ Shopify update error:', err.response?.data || err.message);
     }
   },
