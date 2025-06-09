@@ -6,7 +6,7 @@ const shopifyStoreUrl = 'https://unify-fyp.myshopify.com/admin/api/2023-10';
 const accessToken = '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';
 
 const api = new WooCommerceRestApi({
-  url: 'http://unify.local',
+  url: 'honorable-guitar.localsite.io',
   consumerKey: 'ck_a5f7fb1a7c1d2a2fe6c9372d95aab31fa474ca9b',
   consumerSecret: 'cs_101f5befcb677339149e42659a7f707c857e4b59',
   version: 'wc/v3',
