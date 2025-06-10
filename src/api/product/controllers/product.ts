@@ -12,19 +12,21 @@ const NGROK_BASE_URL = 'https://strapi-backend-production-63b5.up.railway.app';
 export default factories.createCoreController('api::product.product', ({ strapi }) => ({
   async create(ctx) {
     const response = await super.create(ctx); // Create product in Strapi
+    console.log('🧾 Full create response:', JSON.stringify(response, null, 2));
+
 
     const productData = ctx.request.body.data;
 
     try {
       // Extract relative image URL from response
-      const imageField = response?.data?.attributes?.image?.data;
-      const imageUrl = Array.isArray(imageField)
-        ? imageField[0]?.attributes?.url
-        : imageField?.attributes?.url;
+const imageData = response?.data?.attributes?.image?.data;
+const imageUrl = Array.isArray(imageData)
+  ? imageData[0]?.attributes?.url
+  : imageData?.attributes?.url;
 
-      const fullImageUrl = imageUrl ? `${NGROK_BASE_URL}${imageUrl}` : null;
+const fullImageUrl = imageUrl ? `${NGROK_BASE_URL}${imageUrl}` : null;
+console.log('🔗 Final fullImageUrl:', fullImageUrl);
 
-      console.log('🔗 Full Image URL:', fullImageUrl);
 
       const wooPayload = {
         title: productData.Product_Name,
