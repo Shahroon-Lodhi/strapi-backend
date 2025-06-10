@@ -111,7 +111,7 @@ console.log('🔗 Final fullImageUrl:', fullImageUrl);
         ? imageField[0]?.attributes?.url
         : imageField?.attributes?.url;
 
-      const fullImageUrl = imageUrl ? `${NGROK_BASE_URL}${imageUrl}` : null;
+const fullImageUrl = imageUrl || null; // fix this line
       const categoryName = updatedData.Category?.name || 'Uncategorized';
 
       await strapi.service('api::product.product').updateWooProduct(sku, {
