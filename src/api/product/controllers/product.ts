@@ -6,47 +6,48 @@ import {
   deleteShopifyProduct,
 } from '../services/product';
 
-const NGROK_BASE_URL = 'https://5935-2400-adc5-17e-4f00-e433-2328-8ac9-5454.ngrok-free.app';
+// Use your deployed Strapi URL
+const NGROK_BASE_URL = 'https://strapi-backend-production-63b5.up.railway.app';
 
 export default factories.createCoreController('api::product.product', ({ strapi }) => ({
-async create(ctx) {
-  const response = await super.create(ctx); // Create product in Strapi
+  async create(ctx) {
+    const response = await super.create(ctx); // Create product in Strapi
 
-  const productData = ctx.request.body.data;
+    const productData = ctx.request.body.data;
 
-  try {
-    // Extract relative image URL from response
-    const imageUrl = response?.data?.attributes?.image?.data?.attributes?.url;
+    try {
+      // Extract relative image URL from response
+      const imageField = response?.data?.attributes?.image?.data;
+      const imageUrl = Array.isArray(imageField)
+        ? imageField[0]?.attributes?.url
+        : imageField?.attributes?.url;
 
-    // Replace with your public Ngrok URL
-    const baseUrl = 'https://5935-2400-adc5-17e-4f00-e433-2328-8ac9-5454.ngrok-free.app';
-    const fullImageUrl = imageUrl ? `${baseUrl}${imageUrl}` : null;
+      const fullImageUrl = imageUrl ? `${NGROK_BASE_URL}${imageUrl}` : null;
 
-    const wooPayload = {
-      title: productData.Product_Name,
-      price: productData.Selling_Price,
-      description: `SKU: ${productData.Product_SKU}, HS_Code: ${productData.HS_Code}, Category: ${productData.categoryName}`,
-      stock_quantity: productData.Stock_Quantity,
-      sku: productData.Product_SKU,
-      imageUrl: fullImageUrl,
-      categoryName: productData.categoryName,
-    };
+      console.log('🔗 Full Image URL:', fullImageUrl);
 
-    const shopifyPayload = {
-      ...wooPayload, // same fields
-    };
+      const wooPayload = {
+        title: productData.Product_Name,
+        price: productData.Selling_Price,
+        description: `SKU: ${productData.Product_SKU}, HS_Code: ${productData.HS_Code}, Category: ${productData.categoryName}`,
+        stock_quantity: productData.Stock_Quantity,
+        sku: productData.Product_SKU,
+        imageUrl: fullImageUrl,
+        categoryName: productData.categoryName,
+      };
 
-    // Sync to WooCommerce
-    await createWooProduct(wooPayload);
+      const shopifyPayload = {
+        ...wooPayload,
+      };
 
-    // Sync to Shopify
-    await createShopifyProduct(shopifyPayload);
-  } catch (err) {
-    strapi.log.error('❌ WooCommerce/Shopify sync failed:', err);
-  }
+      await createWooProduct(wooPayload);
+      await createShopifyProduct(shopifyPayload);
+    } catch (err) {
+      strapi.log.error('❌ WooCommerce/Shopify sync failed:', err);
+    }
 
-  return response;
-},
+    return response;
+  },
 
   async delete(ctx) {
     const id = ctx.params.id;
@@ -103,7 +104,11 @@ async create(ctx) {
     });
 
     try {
-      const imageUrl = updatedData?.image?.data?.attributes?.url;
+      const imageField = updatedData?.image?.data;
+      const imageUrl = Array.isArray(imageField)
+        ? imageField[0]?.attributes?.url
+        : imageField?.attributes?.url;
+
       const fullImageUrl = imageUrl ? `${NGROK_BASE_URL}${imageUrl}` : null;
       const categoryName = updatedData.Category?.name || 'Uncategorized';
 
