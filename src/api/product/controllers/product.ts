@@ -101,9 +101,13 @@ console.log('🔗 Final fullImageUrl:', fullImageUrl);
 
     const productId = matching[0].id;
 
-    const response = await strapi.entityService.update('api::product.product', productId, {
-      data: updatedData,
-    });
+ const response = await strapi.entityService.update('api::product.product', productId, {
+  data: {
+    ...updatedData,
+    publishedAt: new Date().toISOString(), // Force publish
+  },
+});
+
 
     try {
           
