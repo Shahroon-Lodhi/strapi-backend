@@ -106,12 +106,9 @@ console.log('🔗 Final fullImageUrl:', fullImageUrl);
     });
 
     try {
-      const imageField = updatedData?.image?.data;
-      const imageUrl = Array.isArray(imageField)
-        ? imageField[0]?.attributes?.url
-        : imageField?.attributes?.url;
+          
 
-const fullImageUrl = imageUrl || null; // fix this line
+const fullImageUrl = updatedData?.image?.data?.attributes?.url || null;
       const categoryName = updatedData.Category?.name || 'Uncategorized';
 
       await strapi.service('api::product.product').updateWooProduct(sku, {
